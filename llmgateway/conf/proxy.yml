@@ -1,0 +1,23 @@
+blackedIPs: []
+
+backends:
+  - svcName: "test
+    groupName: "test"
+    protocol: "http"
+    loadBalanceStrategy: "RoundRobin"
+    connTimeout: 1000
+    responseTimeout: 2000
+    breaker:
+      enable: true
+      maxFailures: 10
+      openStateTimeInSeconds: 10000
+      halfOpenStateMaxRequests: 10
+      halfOpenSuccessThreshold: 5
+    needRateLimitURLConf:
+      - uri: "/test"
+        bucketSize: 10
+        tokenPerSecond: 10
+    needRateLimitUserConf:
+      - uri: "/test"
+        bucketSize: 10
+        tokenPerSecond: 10
