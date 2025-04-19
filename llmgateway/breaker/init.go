@@ -17,7 +17,7 @@ func Init() {
 			if !backend.Breaker.Enable {
 				continue
 			}
-			fsmMap[backend.SvcName] = newStateMachine(backend.Breaker)
+			fsmMap[backend.SvcName] = newStateMachine(backend.SvcName, backend.Breaker)
 		}
 	})
 }

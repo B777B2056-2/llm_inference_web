@@ -7,9 +7,14 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/go-redsync/redsync/v4"
+	"github.com/go-redsync/redsync/v4/redis/goredis/v8"
 )
 
-var RedisClient *redis.Client
+var (
+	RedisClient *redis.Client
+	RedisLocker *redsync.Redsync
+)
 
 func initRedis() {
 	conf := confparser.ResourceConfig
@@ -18,9 +23,9 @@ func initRedis() {
 		Password:     conf.Redis.Password,
 		DB:           conf.Redis.DB,
 		PoolSize:     conf.Redis.PoolSize,
-		DialTimeout:  time.Duration(conf.Redis.DialTimeout) * time.Second,
-		ReadTimeout:  time.Duration(conf.Redis.ReadTimeout) * time.Second,
-		WriteTimeout: time.Duration(conf.Redis.WriteTimeout) * time.Second,
+		DialTimeout:  time.Duration(conf.Redis.DialTimeoutSecond) * time.Second,
+		ReadTimeout:  time.Duration(conf.Redis.ReadTimeoutSecond) * time.Second,
+		WriteTimeout: time.Duration(conf.Redis.WriteTimeoutSecond) * time.Second,
 		MaxRetries:   conf.Redis.ConnMaxRetries,
 	})
 
@@ -28,4 +33,8 @@ func initRedis() {
 		panic(err)
 	}
 	RedisClient = rdb
+	RedisLocker = redsync.New(goredis.NewPool(rdb))
+	if RedisLocker == nil {
+		panic("redis locker is nil")
+	}
 }

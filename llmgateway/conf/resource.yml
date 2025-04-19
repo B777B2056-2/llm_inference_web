@@ -14,8 +14,12 @@ redis:
   pwd: "123456"
   db: 0
   poolSize: 10
-  dialTimeout: 5
-  readTimeout: 3
-  writeTimeout: 3
+  dialTimeoutSecond: 5
+  readTimeoutSecond: 3
+  writeTimeoutSecond: 3
   connMaxRetries: 3
   txMaxRetries: 3
+  lock:
+    maxRetries: 2
+    retryDelayMs: 250
+

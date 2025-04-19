@@ -20,16 +20,20 @@ var ResourceConfig struct {
 		MaxStorageAgeInDays int    `yaml:"maxStorageAgeInDays"`
 	}
 	Redis struct {
-		Host           string `yaml:"host"`
-		Port           int    `yaml:"port"`
-		Password       string `yaml:"pwd"`
-		DB             int    `yaml:"db"`
-		PoolSize       int    `yaml:"poolSize"`
-		DialTimeout    int    `yaml:"dialTimeout"`
-		ReadTimeout    int    `yaml:"readTimeout"`
-		WriteTimeout   int    `yaml:"writeTimeout"`
-		ConnMaxRetries int    `yaml:"connMaxRetries"`
-		TxMaxRetries   int    `yaml:"txMaxRetries"`
+		Host               string `yaml:"host"`
+		Port               int    `yaml:"port"`
+		Password           string `yaml:"pwd"`
+		DB                 int    `yaml:"db"`
+		PoolSize           int    `yaml:"poolSize"`
+		DialTimeoutSecond  int    `yaml:"dialTimeoutSecond"`
+		ReadTimeoutSecond  int    `yaml:"readTimeoutSecond"`
+		WriteTimeoutSecond int    `yaml:"writeTimeoutSecond"`
+		ConnMaxRetries     int    `yaml:"connMaxRetries"`
+		TxMaxRetries       int    `yaml:"txMaxRetries"`
+		Lock               struct {
+			MaxRetries   int `yaml:"maxRetries"`
+			RetryDelayMs int `yaml:"retryDelayMs"`
+		} `yaml:"lock"`
 	}
 }
 
