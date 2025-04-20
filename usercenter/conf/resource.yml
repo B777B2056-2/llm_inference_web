@@ -1,6 +1,6 @@
 server:
-  httpPort: 8079
-  grpcPort: 8081
+  httpPort: 8081
+  grpcPort: 8082
   tokenSecretKey: "ertyhujbvcxdcfvgbhnjm"
   tokenExpirationInSecond: 600
   captchaExpirationInSecond: 65
@@ -13,7 +13,7 @@ logger:
   maxStorageAgeInDays: 7
 
 redis:
-  host: "localhost"
+  host: "127.0.0.1"
   port: 6379
   pwd: "123456"
   db: 0
@@ -28,10 +28,10 @@ redis:
     retryDelayMs: 250
 
 mysql:
-  host: "localhost"
+  host: "127.0.0.1"
   port: 3306
   username: "root"
-  pwd: "123456"
+  pwd: "your_password"
   dbName: "user_center"
   maxIdleConns: 5
   maxOpenConns: 10

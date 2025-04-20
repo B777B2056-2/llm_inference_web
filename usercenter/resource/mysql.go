@@ -12,11 +12,12 @@ var DB *gorm.DB
 
 func buildDSN() string {
 	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local)",
+		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		confparser.ResourceConfig.MySQL.Username,
 		confparser.ResourceConfig.MySQL.Password,
 		confparser.ResourceConfig.MySQL.Host,
 		confparser.ResourceConfig.MySQL.Port,
+		confparser.ResourceConfig.MySQL.DBName,
 	)
 }
 

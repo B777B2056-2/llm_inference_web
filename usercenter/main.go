@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -13,6 +14,18 @@ import (
 	"llm_online_inference/usercenter/router"
 	"net"
 )
+
+var (
+	// 命令行参数
+	errorConfigPath    string
+	resourceConfigPath string
+)
+
+func parseArgs() {
+	flag.StringVar(&errorConfigPath, "errorConf", "conf/errors.yml", "path to error config file")
+	flag.StringVar(&resourceConfigPath, "resourceConf", "conf/resource.yml", "path to resource config file")
+	flag.Parse()
+}
 
 func startUpHTTPServer(r *gin.Engine) {
 	go func(r *gin.Engine) {
@@ -35,8 +48,10 @@ func startUpGRPCServer(lis net.Listener) {
 }
 
 func main() {
-	confparser.InitErrorConfig("")
-	confparser.InitResourceConfig("")
+	parseArgs()
+
+	confparser.InitErrorConfig(errorConfigPath)
+	confparser.InitResourceConfig(resourceConfigPath)
 	resource.Init()
 
 	// 初始化HTTP服务
@@ -44,7 +59,7 @@ func main() {
 	router.Init(r)
 
 	// 初始化GPRC服务
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", confparser.ResourceConfig.Server.HTTPPort))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", confparser.ResourceConfig.Server.GRPCPort))
 	if err != nil {
 		panic(fmt.Errorf("failed to listen: %v", err))
 	}

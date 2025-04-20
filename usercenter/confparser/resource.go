@@ -44,7 +44,7 @@ var ResourceConfig struct {
 		Port                    int    `yaml:"port"`
 		Username                string `yaml:"username"`
 		Password                string `yaml:"pwd"`
-		DBName                  int    `yaml:"dbName"`
+		DBName                  string `yaml:"dbName"`
 		MaxIdleConns            int    `yaml:"maxIdleConns"`
 		MaxOpenConns            int    `yaml:"maxOpenConns"`
 		ConnMaxLifetimeInSecond int    `yaml:"connMaxLifetimeInSecond"`

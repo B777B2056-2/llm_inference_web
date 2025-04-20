@@ -1,7 +1,7 @@
 blackedIPs: []
 
 backends:
-  - svcName: "user"
+  - svcName: "127.0.0.1:8081"
     groupName: "user"
     protocol: "http"
     needRefreshToken: false
@@ -27,4 +27,4 @@ backends:
 rpc:
   user_center:
     host: "127.0.0.1"
-    port: 8081
+    port: 8082
