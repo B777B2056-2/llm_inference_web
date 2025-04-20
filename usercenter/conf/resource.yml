@@ -1,0 +1,38 @@
+server:
+  httpPort: 8079
+  grpcPort: 8081
+  tokenSecretKey: "ertyhujbvcxdcfvgbhnjm"
+  tokenExpirationInSecond: 600
+  captchaExpirationInSecond: 65
+
+logger:
+  level: "debug"
+  outputPath: "output/logs"
+  maxSingleFileSizeMB: 100
+  maxBackups: 1
+  maxStorageAgeInDays: 7
+
+redis:
+  host: "localhost"
+  port: 6379
+  pwd: "123456"
+  db: 0
+  poolSize: 10
+  dialTimeoutSecond: 5
+  readTimeoutSecond: 3
+  writeTimeoutSecond: 3
+  connMaxRetries: 3
+  txMaxRetries: 3
+  lock:
+    maxRetries: 2
+    retryDelayMs: 250
+
+mysql:
+  host: "localhost"
+  port: 3306
+  username: "root"
+  pwd: "123456"
+  dbName: "user_center"
+  maxIdleConns: 5
+  maxOpenConns: 10
+  connMaxLifetimeInSecond: 3

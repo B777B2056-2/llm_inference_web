@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"llm_online_interence/llmgateway/confparser"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,9 +17,7 @@ func BlackedIPs() gin.HandlerFunc {
 			}
 		}
 		if isBlackedIP {
-			ctx.JSON(403, gin.H{
-				"message": "Forbidden",
-			})
+			ctx.Status(http.StatusForbidden)
 			ctx.Abort()
 			return
 		}

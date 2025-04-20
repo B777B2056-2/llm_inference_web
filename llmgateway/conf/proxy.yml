@@ -1,9 +1,10 @@
 blackedIPs: []
 
 backends:
-  - svcName: "test
-    groupName: "test"
+  - svcName: "user"
+    groupName: "user"
     protocol: "http"
+    needRefreshToken: false
     loadBalanceStrategy: "RoundRobin"
     connTimeout: 1000
     responseTimeout: 2000
@@ -13,6 +14,7 @@ backends:
       openStateTimeInSeconds: 10000
       halfOpenStateMaxRequests: 10
       halfOpenSuccessThreshold: 5
+    needAuthURLs: []
     needRateLimitURLConf:
       - uri: "/test"
         bucketSize: 10
@@ -21,3 +23,8 @@ backends:
       - uri: "/test"
         bucketSize: 10
         tokenPerSecond: 10
+
+rpc:
+  user_center:
+    host: "127.0.0.1"
+    port: 8081

@@ -1,0 +1,23 @@
+syntax = "proto3";
+package user_center;
+option go_package = "./pb";
+import "google/protobuf/empty.proto";
+
+message UserToken {
+  string token_string = 1;
+}
+
+message AuthCheckResult {
+  bool has_auth = 1;
+}
+
+message UserInfo {
+  uint32 id = 1;
+  string name = 2;
+}
+
+service UserCenterService {
+  rpc CheckAuth (UserToken) returns (AuthCheckResult);
+  rpc GetUserInfo (UserToken) returns (UserInfo);
+  rpc UpdateUserToken (UserToken) returns (google.protobuf.Empty);
+}

@@ -11,6 +11,8 @@ import (
 func initRouter(r *gin.Engine) {
 	for _, backend := range confparser.ProxyConfig.Backends {
 		group := r.Group(backend.GroupName)
+		group.Use(middleware.UserAuth(backend))
+		group.Use(middleware.RefreshUserToken(backend))
 		group.Use(middleware.RateLimit(backend.SvcName))
 		group.Use(middleware.Breaker(backend.SvcName)) // 断路器需保证为最后一个中间件，否则无法生效
 		group.Any("/*proxyPath", func(ctx *gin.Context) {

@@ -25,18 +25,26 @@ type RateLimitURLConfItem struct {
 type BackendConfigItem struct {
 	SvcName               string                 `yaml:"svcName"`
 	GroupName             string                 `yaml:"groupName"`
+	NeedRefreshToken      bool                   `yaml:"needRefreshToken"`
 	Protocol              string                 `yaml:"protocol"`
 	LoadBalanceStrategy   string                 `yaml:"loadBalanceStrategy"`
 	ConnectionTimeout     int                    `yaml:"connectionTimeout"`
 	ResponseTimeout       int                    `yaml:"responseTimeout"`
 	Breaker               BreakerConf            `yaml:"breaker"`
+	NeedAuthURLs          []string               `yaml:"needAuthURLs"`
 	NeedRateLimitURLConf  []RateLimitURLConfItem `yaml:"needRateLimitURLConf"`  // url层面限流配置（限制总体并发）
 	NeedRateLimitUserConf []RateLimitURLConfItem `yaml:"needRateLimitUserConf"` // 用户层面限流配置（限制单用户并发）
+}
+
+type GRPCConfigItem struct {
+	Host string `yaml:"host"`
+	Port uint   `yaml:"port"`
 }
 
 var ProxyConfig struct {
 	BlackedIPs      []string                                   `yaml:"blackedIPs"`
 	Backends        []BackendConfigItem                        `yaml:"backends"`
+	GRPC            map[string]GRPCConfigItem                  `yaml:"grpc"`
 	SvcURIRateLimit map[string]map[string]RateLimitURLConfItem `yaml:"-"` // 外层key为svc name，内层key为uri
 	UserRateLimit   map[string]map[string]RateLimitURLConfItem `yaml:"-"` // 外层key为svc name，内层key为uri
 }
