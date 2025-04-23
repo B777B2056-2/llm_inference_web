@@ -1,0 +1,18 @@
+syntax = "proto3";
+package model_server;
+option go_package = "./pb";
+
+message ChatCompletionReq {
+  string chat_session_id = 1;
+  repeated uint32 input_ids = 2;
+  repeated uint32 attention_mask = 3;
+}
+
+message ChatCompletionResult {
+  string answer = 1;
+  uint32 token_cnt = 2;
+}
+
+service ModelServerService {
+  rpc ChatCompletion (ChatCompletionReq) returns (stream ChatCompletionResult);
+}

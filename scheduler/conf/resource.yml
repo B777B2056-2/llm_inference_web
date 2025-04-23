@@ -1,0 +1,42 @@
+server:
+  httpPort: 8083
+  grpcPort: 8084
+
+logger:
+  level: "debug"
+  outputPath: "output/logs"
+  maxSingleFileSizeMB: 100
+  maxBackups: 1
+  maxStorageAgeInDays: 7
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  pwd: "123456"
+  db: 0
+  poolSize: 10
+  dialTimeoutSecond: 5
+  readTimeoutSecond: 3
+  writeTimeoutSecond: 3
+  connMaxRetries: 3
+  txMaxRetries: 3
+  lock:
+    maxRetries: 2
+    retryDelayMs: 250
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  pwd: "your_password"
+  dbName: "user_center"
+  maxIdleConns: 5
+  maxOpenConns: 10
+  connMaxLifetimeInSecond: 3
+
+kafka:
+  addrs:
+    - host: "127.0.0.1"
+      port: 3306
+  sendMsgTimeoutInMs: 50
+  recvMsgTimeoutInMs: 50

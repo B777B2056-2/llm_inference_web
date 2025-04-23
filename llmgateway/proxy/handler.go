@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"fmt"
+	"llm_online_interence/llmgateway/client"
 	"llm_online_interence/llmgateway/confparser"
 	"llm_online_interence/llmgateway/resource"
 	"net"
@@ -44,7 +45,9 @@ func commonProxyHandler(ctx *gin.Context, backend confparser.BackendConfigItem) 
 	// 初始化反向代理器
 	remote, err := url.Parse(fmt.Sprintf("%s://%s", protocol, svcName))
 	if err != nil {
-		panic(err)
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
 	}
 
 	proxyPath := ctx.Param("proxyPath")
@@ -57,9 +60,23 @@ func commonProxyHandler(ctx *gin.Context, backend confparser.BackendConfigItem) 
 		"request": string(requestDump),
 	}).Debug("proxy request")
 
+	// 从user服务获取用户信息
+	tokenString := ctx.GetHeader("Authorization")
+	clt, err := client.NewUserCenterGRPCClient()
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
+	}
+	userInfo, _ := clt.GetUserInfo(ctx, tokenString)
+
 	// 设置反向代理的请求转发规则
 	proxy.Director = func(req *http.Request) {
 		req.Header = ctx.Request.Header
+		if userInfo != nil {
+			req.Header.Set("user_id", fmt.Sprint(userInfo.Id))
+			req.Header.Set("username", fmt.Sprint(userInfo.Name))
+		}
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
