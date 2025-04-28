@@ -2,10 +2,12 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"llm_online_inference/scheduler/controller"
+	"llm_online_inference/accessor/controller"
 )
 
 func Init(r *gin.Engine) {
+	r.Use(traceIdMiddleware)
+
 	chatGroup := r.Group("chat")
 	chatGroup.Use(userIDMiddleware)
 	chatGroup.POST("completion", sseMiddleware, controller.ChatCompletion) // 对话流式接口（SSE）

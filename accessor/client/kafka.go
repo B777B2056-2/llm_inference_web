@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
-	"llm_online_inference/scheduler/confparser"
-	"llm_online_inference/scheduler/resource"
+	"llm_online_inference/accessor/confparser"
+	"llm_online_inference/accessor/resource"
 	"time"
 )
 

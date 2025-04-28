@@ -2,7 +2,7 @@ package resource
 
 import (
 	"fmt"
-	"llm_online_inference/scheduler/confparser"
+	"llm_online_inference/accessor/confparser"
 	"os"
 	"path"
 

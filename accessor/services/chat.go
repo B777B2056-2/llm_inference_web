@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"llm_online_inference/scheduler/dao"
+	"llm_online_inference/accessor/dao"
 	"net/http"
 
-	"llm_online_inference/scheduler/client"
-	"llm_online_inference/scheduler/dto"
-	"llm_online_inference/scheduler/resource"
+	"llm_online_inference/accessor/client"
+	"llm_online_inference/accessor/dto"
+	"llm_online_inference/accessor/resource"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"

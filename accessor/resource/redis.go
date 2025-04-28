@@ -3,7 +3,7 @@ package resource
 import (
 	"context"
 	"fmt"
-	"llm_online_inference/scheduler/confparser"
+	"llm_online_inference/accessor/confparser"
 	"time"
 
 	"github.com/go-redis/redis/v8"

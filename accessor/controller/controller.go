@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"llm_online_inference/scheduler/resource"
+	"llm_online_inference/accessor/resource"
 	"net/http"
 
-	"llm_online_inference/scheduler/dto"
-	"llm_online_inference/scheduler/services"
+	"llm_online_inference/accessor/dto"
+	"llm_online_inference/accessor/services"
 
 	"github.com/gin-gonic/gin"
 )

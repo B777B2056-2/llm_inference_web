@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"llm_online_inference/scheduler/confparser"
+	"llm_online_inference/accessor/confparser"
 )
 
 var MongoDB *mongo.Database

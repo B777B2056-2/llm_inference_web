@@ -7,9 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
 	"github.com/segmentio/kafka-go"
-	"llm_online_inference/scheduler/client"
-	"llm_online_inference/scheduler/dao"
-	"llm_online_inference/scheduler/dto"
+	"llm_online_inference/accessor/client"
+	"llm_online_inference/accessor/dao"
+	"llm_online_inference/accessor/dto"
 )
 
 type BatchInferenceOperator struct {

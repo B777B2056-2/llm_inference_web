@@ -1,4 +1,4 @@
-module llm_online_inference/scheduler
+module llm_online_inference/accessor
 
 go 1.24.2
 

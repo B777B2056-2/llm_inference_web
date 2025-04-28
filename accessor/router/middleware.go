@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"llm_online_inference/accessor/resource"
 	"net/http"
 	"strconv"
 )
@@ -30,5 +31,17 @@ func userIDMiddleware(ctx *gin.Context) {
 		return
 	}
 	ctx.Set("user_id", userId)
+	ctx.Next()
+}
+
+func traceIdMiddleware(ctx *gin.Context) {
+	traceId := ctx.GetHeader("X-Trace-Id")
+	if traceId == "" {
+		ctx.Status(http.StatusUnauthorized)
+		ctx.Abort()
+		return
+	}
+	ctx.Set("trace_id", traceId)
+	resource.Logger.AddHook(resource.NewTraceIdHook(traceId))
 	ctx.Next()
 }

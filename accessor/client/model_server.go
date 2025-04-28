@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"llm_online_inference/scheduler/confparser"
-	"llm_online_inference/scheduler/dto"
-	"llm_online_inference/scheduler/pb"
+	"llm_online_inference/accessor/confparser"
+	"llm_online_inference/accessor/dto"
+	"llm_online_inference/accessor/pb"
 )
 
 type ModelServer struct {
