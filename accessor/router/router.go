@@ -8,8 +8,8 @@ import (
 func Init(r *gin.Engine) {
 	chatGroup := r.Group("chat")
 	chatGroup.Use(userIDMiddleware)
-	chatGroup.POST("completion", controller.ChatCompletion) // 对话流式接口（SSE）
-	chatGroup.POST("history", controller.ChatHistory)       // 对话历史记录
+	chatGroup.POST("completion", sseMiddleware, controller.ChatCompletion) // 对话流式接口（SSE）
+	chatGroup.POST("history", controller.ChatHistory)                      // 对话历史记录
 
 	batchInferenceGroup := r.Group("batchInference")
 	batchInferenceGroup.Use(userIDMiddleware)
