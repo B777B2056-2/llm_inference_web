@@ -15,13 +15,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type OnlineInferenceOperator struct{}
-
-func NewOnlineInferenceOperator() *OnlineInferenceOperator {
-	return &OnlineInferenceOperator{}
+type OnlineInferenceOperator struct {
+	userId int
 }
 
-func (o *OnlineInferenceOperator) ChatCompletion(ctx *gin.Context, userID int, params *dto.ChatCompletionReq) error {
+func NewOnlineInferenceOperator(userId int) *OnlineInferenceOperator {
+	return &OnlineInferenceOperator{userId: userId}
+}
+
+func (o *OnlineInferenceOperator) ChatCompletion(ctx *gin.Context, params *dto.ChatCompletionReq) error {
 	// 调用分词服务：获取当前prompt的分词结果
 	tokenIds, tokenTypeIds, err := client.NewTokenizer().Encode(ctx, params.Prompt)
 	if err != nil {
@@ -30,14 +32,16 @@ func (o *OnlineInferenceOperator) ChatCompletion(ctx *gin.Context, userID int, p
 
 	// 创建对话历史：如果为第一次对话，会自动创建各种id
 	historyID, err := dao.NewChatHistoryDao().Create(
-		userID, params.ChatSessionId, params.ParentMessageId, params.Prompt, len(tokenIds),
+		o.userId, params.ChatSessionId, params.ParentMessageId, params.Prompt, len(tokenIds),
 	)
 	if err != nil {
 		return err
 	}
 
 	// 调用模型服务，开启流式传输
-	modelAnswerStream, err := client.NewModelServer().ChatCompletion(ctx, params.ChatSessionId, tokenIds, tokenTypeIds)
+	modelAnswerStream, err := client.NewModelServer().ChatCompletion(
+		ctx, params.ChatSessionId, tokenIds, tokenTypeIds, params.InferenceParams,
+	)
 	if err != nil {
 		return err
 	}
@@ -62,7 +66,7 @@ func (o *OnlineInferenceOperator) ChatCompletion(ctx *gin.Context, userID int, p
 			}
 			resource.Logger.WithFields(
 				logrus.Fields{
-					"userID":        userID,
+					"userID":        o.userId,
 					"chatSessionID": params.ChatSessionId,
 					"error":         err.Error(),
 				},
@@ -86,15 +90,15 @@ func (o *OnlineInferenceOperator) ChatCompletion(ctx *gin.Context, userID int, p
 	}
 }
 
-func (o *OnlineInferenceOperator) GetChatHistory(_ *gin.Context, userID int, params dto.ChatHistoryReq) (
+func (o *OnlineInferenceOperator) GetChatHistory(_ *gin.Context, params dto.ChatHistoryReq) (
 	res dto.ChatHistoryResp, err error) {
-	res.TotalCount, err = dao.NewChatHistoryDao().CountByChatSessionID(userID, params.ChatSessionID)
+	res.TotalCount, err = dao.NewChatHistoryDao().CountByChatSessionID(o.userId, params.ChatSessionID)
 	if err != nil {
 		return res, err
 	}
 
 	histories, err := dao.NewChatHistoryDao().GetByChatSessionID(
-		userID, params.ChatSessionID, params.PageIndex, params.PageSize,
+		o.userId, params.ChatSessionID, params.PageIndex, params.PageSize,
 	)
 	if err != nil {
 		return res, err

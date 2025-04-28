@@ -31,7 +31,7 @@ func ChatCompletion(ctx *gin.Context) {
 	}
 
 	// sse返回数据
-	if err := services.NewOnlineInferenceOperator().ChatCompletion(ctx, userId, &params); err != nil {
+	if err := services.NewOnlineInferenceOperator(userId).ChatCompletion(ctx, &params); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		ctx.Abort()
 		return
@@ -57,7 +57,7 @@ func ChatHistory(ctx *gin.Context) {
 		return
 	}
 
-	resp, err := services.NewOnlineInferenceOperator().GetChatHistory(ctx, userId, params)
+	resp, err := services.NewOnlineInferenceOperator(userId).GetChatHistory(ctx, params)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		ctx.Abort()
@@ -85,7 +85,7 @@ func CreateBatchInferenceTask(ctx *gin.Context) {
 		return
 	}
 
-	err := services.NewBatchInferenceOperator().CreateTask(ctx, userId, params)
+	err := services.NewBatchInferenceOperator(userId).CreateTask(ctx, params)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		ctx.Abort()
@@ -113,7 +113,7 @@ func GetBatchInferenceTaskResults(ctx *gin.Context) {
 		return
 	}
 
-	resp, err := services.NewBatchInferenceOperator().TaskResults(ctx, userId, params)
+	resp, err := services.NewBatchInferenceOperator(userId).TaskResults(ctx, params)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		ctx.Abort()

@@ -21,9 +21,6 @@ def consume_kafka_messages(queue):
   for msg in consumer:
     try:
       data = json.loads(msg.value)
-      if "id" not in data or "user_id" not in data or "sampling_params" not in data or "prompts" not in data:
-        continue
-
       sampling_params = SamplingParams.from_dict(data["sampling_params"])
       queue.put({
         "id": data["batch_inference_id"],
