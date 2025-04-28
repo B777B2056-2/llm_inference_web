@@ -12,6 +12,7 @@ message ChatCompletionReq {
   int32 top_k = 7;
   repeated uint64 token_ids = 8;
   repeated uint64 token_type_ids = 9;
+  string trace_id = 10;
 }
 
 message ChatCompletionResult {

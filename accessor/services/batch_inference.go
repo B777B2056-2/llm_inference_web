@@ -38,9 +38,14 @@ func (b *BatchInferenceOperator) CreateTask(ctx *gin.Context, param dto.CreateBa
 	taskId := uid.String()
 	// 塞入kafka
 	productor := client.NewKafkaProductorClient(client.TopicBatchInferenceRequests)
+	traceId, _ := ctx.Get("trace_id")
 	inferenceParamsJson, _ := json.Marshal(param)
 	promptsJson, _ := json.Marshal(param.Prompts)
 	msgs := []kafka.Message{
+		{
+			Key:   []byte("trace_id"),
+			Value: []byte(traceId.(string)),
+		},
 		{
 			Key:   []byte("batch_inference_id"),
 			Value: []byte(taskId),

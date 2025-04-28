@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftokenizer.proto\x12\ttokenizer\"\x1e\n\x0cTokenizerReq\x12\x0e\n\x06prompt\x18\x01 \x01(\t\":\n\rTokenizerResp\x12\x11\n\ttoken_ids\x18\x01 \x03(\x04\x12\x16\n\x0etoken_type_ids\x18\x02 \x03(\x04\"#\n\x0e\x44\x65TokenizerReq\x12\x11\n\ttoken_ids\x18\x01 \x03(\x04\"!\n\x11\x44\x65TokenizerResult\x12\x0c\n\x04text\x18\x01 \x01(\t2\x9a\x01\n\x10TokenizerService\x12>\n\tTokenizer\x12\x17.tokenizer.TokenizerReq\x1a\x18.tokenizer.TokenizerResp\x12\x46\n\x0b\x44\x65Tokenizer\x12\x19.tokenizer.DeTokenizerReq\x1a\x1c.tokenizer.DeTokenizerResultB\x06Z\x04./pbb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftokenizer.proto\x12\ttokenizer\"0\n\x0cTokenizerReq\x12\x10\n\x08trace_id\x18\x01 \x01(\t\x12\x0e\n\x06prompt\x18\x02 \x01(\t\":\n\rTokenizerResp\x12\x11\n\ttoken_ids\x18\x01 \x03(\x04\x12\x16\n\x0etoken_type_ids\x18\x02 \x03(\x04\"5\n\x0e\x44\x65TokenizerReq\x12\x10\n\x08trace_id\x18\x01 \x01(\t\x12\x11\n\ttoken_ids\x18\x02 \x03(\x04\"!\n\x11\x44\x65TokenizerResult\x12\x0c\n\x04text\x18\x01 \x01(\t2\x9a\x01\n\x10TokenizerService\x12>\n\tTokenizer\x12\x17.tokenizer.TokenizerReq\x1a\x18.tokenizer.TokenizerResp\x12\x46\n\x0b\x44\x65Tokenizer\x12\x19.tokenizer.DeTokenizerReq\x1a\x1c.tokenizer.DeTokenizerResultB\x06Z\x04./pbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,13 +33,13 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z\004./pb'
   _globals['_TOKENIZERREQ']._serialized_start=30
-  _globals['_TOKENIZERREQ']._serialized_end=60
-  _globals['_TOKENIZERRESP']._serialized_start=62
-  _globals['_TOKENIZERRESP']._serialized_end=120
-  _globals['_DETOKENIZERREQ']._serialized_start=122
-  _globals['_DETOKENIZERREQ']._serialized_end=157
-  _globals['_DETOKENIZERRESULT']._serialized_start=159
-  _globals['_DETOKENIZERRESULT']._serialized_end=192
-  _globals['_TOKENIZERSERVICE']._serialized_start=195
-  _globals['_TOKENIZERSERVICE']._serialized_end=349
+  _globals['_TOKENIZERREQ']._serialized_end=78
+  _globals['_TOKENIZERRESP']._serialized_start=80
+  _globals['_TOKENIZERRESP']._serialized_end=138
+  _globals['_DETOKENIZERREQ']._serialized_start=140
+  _globals['_DETOKENIZERREQ']._serialized_end=193
+  _globals['_DETOKENIZERRESULT']._serialized_start=195
+  _globals['_DETOKENIZERRESULT']._serialized_end=228
+  _globals['_TOKENIZERSERVICE']._serialized_start=231
+  _globals['_TOKENIZERSERVICE']._serialized_end=385
 # @@protoc_insertion_point(module_scope)

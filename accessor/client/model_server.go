@@ -28,6 +28,10 @@ func (m *ModelServer) ChatCompletion(ctx context.Context, chatSessionID string, 
 	}
 	defer func() { _ = conn.Close() }()
 	clt := pb.NewModelServerServiceClient(conn)
+	traceId, ok := ctx.Value("trace_id").(string)
+	if !ok {
+		traceId = "unknown"
+	}
 	stream, err := clt.ChatCompletion(ctx, &pb.ChatCompletionReq{
 		ChatSessionId:     chatSessionID,
 		TokenIds:          tokenIds,
@@ -38,6 +42,7 @@ func (m *ModelServer) ChatCompletion(ctx context.Context, chatSessionID string, 
 		Temperature:       params.Temperature,
 		TopP:              params.TopP,
 		TopK:              params.TopK,
+		TraceId:           traceId,
 	})
 	if err != nil {
 		return nil, err

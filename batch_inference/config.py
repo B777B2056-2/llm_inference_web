@@ -30,3 +30,12 @@ MONGO_CONFIG = {
     "db": "batch_inference",
     "collection": "batch_inference_results",
 }
+
+# 日志配置
+LOGGER = {
+    "level": "debug",
+    "outputPath": "output/logs",
+    "maxSingleFileSizeMB": 100,
+    "maxBackups": 1,
+    "maxStorageAgeInDays": 7,
+}

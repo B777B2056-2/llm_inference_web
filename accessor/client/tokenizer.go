@@ -19,14 +19,18 @@ func NewTokenizer() *Tokenizer {
 	}
 }
 
-func (t *Tokenizer) Encode(ctx context.Context, prompt string) (input_ids, token_typ_ids []uint64, err error) {
+func (t *Tokenizer) Encode(ctx context.Context, prompt string) (inputIds, tokenTypIds []uint64, err error) {
 	conn, err := grpc.NewClient(t.addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, nil, err
 	}
 	defer func() { _ = conn.Close() }()
 	clt := pb.NewTokenizerServiceClient(conn)
-	resp, err := clt.Tokenizer(ctx, &pb.TokenizerReq{Prompt: prompt})
+	traceId, ok := ctx.Value("trace_id").(string)
+	if !ok {
+		traceId = "unknown"
+	}
+	resp, err := clt.Tokenizer(ctx, &pb.TokenizerReq{Prompt: prompt, TraceId: traceId})
 	if err != nil {
 		return nil, nil, err
 	}
@@ -40,7 +44,11 @@ func (t *Tokenizer) Decode(ctx context.Context, tokenIds []uint64) (text string,
 	}
 	defer func() { _ = conn.Close() }()
 	clt := pb.NewTokenizerServiceClient(conn)
-	resp, err := clt.DeTokenizer(ctx, &pb.DeTokenizerReq{TokenIds: tokenIds})
+	traceId, ok := ctx.Value("trace_id").(string)
+	if !ok {
+		traceId = "unknown"
+	}
+	resp, err := clt.DeTokenizer(ctx, &pb.DeTokenizerReq{TokenIds: tokenIds, TraceId: traceId})
 	if err != nil {
 		return "", err
 	}

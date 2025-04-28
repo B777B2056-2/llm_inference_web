@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from loguru import logger
 from multiprocessing import Queue
 from typing import List, Tuple
 from config import VLLM_CONFIG
@@ -44,6 +45,12 @@ def run(q: Queue) -> None:
       continue
     if param["sampling_params"] is None or len(param["prompts"]) == 0:
       continue
-    results = d.do_decoder(sampling_params=param["sampling_params"], prompts=param["prompts"])
-    # 存入数据库
-    database.insert_results(id=param["id"], user_id=param["user_id"], results=results)
+
+    trace_id = "unknown"
+    try:
+      trace_id = param["trace_id"]
+      results = d.do_decoder(sampling_params=param["sampling_params"], prompts=param["prompts"])
+      # 存入数据库
+      database.insert_results(id=param["id"], user_id=param["user_id"], results=results)
+    except Exception as e:
+      logger.error(f'[{trace_id}] Batch Inference Decoder Error: {e}')

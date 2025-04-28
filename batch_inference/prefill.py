@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from loguru import logger
 from multiprocessing import Queue
 from typing import List
 from config import VLLM_CONFIG
@@ -36,5 +37,11 @@ def run(input_q: Queue, output_q: Queue) -> None:
       continue
     if param["sampling_params"] is None or len(param["prompts"]) == 0:
       continue
-    p.do_prefill(sampling_params=param["sampling_params"], prompts=param["prompts"])
-    output_q.put(param)
+
+    trace_id = "unknown"
+    try:
+      trace_id = param["trace_id"]
+      p.do_prefill(sampling_params=param["sampling_params"], prompts=param["prompts"])
+      output_q.put(param)
+    except Exception as e:
+      logger.error(f'[{trace_id}] Batch Inference Prefill Error: {e}')

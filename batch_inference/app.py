@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from logger import setup_logging
+from loguru import logger
 import json
 from kafka import KafkaConsumer
 from multiprocessing import Process, Queue
@@ -19,10 +21,13 @@ def consume_kafka_messages(queue):
   )
 
   for msg in consumer:
+    trace_id = "unknown"
     try:
       data = json.loads(msg.value)
+      trace_id = data["trace_id"]
       sampling_params = SamplingParams.from_dict(data["sampling_params"])
       queue.put({
+        "trace_id": trace_id,
         "id": data["batch_inference_id"],
         "name": data["batch_inference_name"],
         "user_id": data["user_id"],
@@ -30,7 +35,7 @@ def consume_kafka_messages(queue):
         "prompts": data["prompts"]
       })
     except Exception as e:
-      print(f"无效消息: {msg.value}, 错误: {e}")
+      logger.error(f'[{trace_id}] Batch Inference Error: {e}')
 
 
 def main():
@@ -50,4 +55,9 @@ def main():
 
 
 if __name__ == "__main__":
-  main()
+  setup_logging()
+  try:
+    main()
+  except Exception as e:
+    logger.critical(f'Batch Inference Error: {e}')
+    raise e

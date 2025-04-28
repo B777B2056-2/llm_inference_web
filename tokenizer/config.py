@@ -8,4 +8,13 @@ MAX_WORKS = 10
 
 
 # LLM配置
-MODEL_NAME = "Qwen/Qwen2-0.5B"              # 模型名称
+MODEL_NAME = "Qwen/Qwen2-0.5B"
+
+# 日志配置
+LOGGER = {
+    "level": "debug",
+    "outputPath": "output/logs",
+    "maxSingleFileSizeMB": 100,
+    "maxBackups": 1,
+    "maxStorageAgeInDays": 7,
+}

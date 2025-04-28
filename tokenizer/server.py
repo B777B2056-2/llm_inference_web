@@ -1,16 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from logger import setup_logging
+from loguru import logger
 import grpc
 import config
 from concurrent import futures
 import pb.tokenizer_pb2
 import pb.tokenizer_pb2_grpc
 from tokenizer import Qwen2TokenizerSingleton
-
-
-def initialize():
-    # 初始化分词器
-    Qwen2TokenizerSingleton().initialize()
 
 
 class TokenizerServicer(pb.tokenizer_pb2_grpc.TokenizerServiceServicer):
@@ -30,7 +27,7 @@ class TokenizerServicer(pb.tokenizer_pb2_grpc.TokenizerServiceServicer):
             )
 
         except Exception as e:
-            # 错误处理
+            logger.error(f"[{request.trace_id}] TokenizerServicer.Tokenizer error: {e}", exc_info=True)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(f"Tokenizer error: {str(e)}")
             return pb.tokenizer_pb2.TokenizerResp()
@@ -40,7 +37,7 @@ class TokenizerServicer(pb.tokenizer_pb2_grpc.TokenizerServiceServicer):
             text = self.tokenizer.decode(request.token_ids)
             return pb.tokenizer_pb2.DeTokenizerResult(text=text)
         except Exception as e:
-            # 错误处理
+            logger.error(f"[{request.trace_id}] TokenizerServicer.DeTokenizer error: {e}", exc_info=True)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(f"Tokenizer error: {str(e)}")
             return pb.tokenizer_pb2.DeTokenizerResult()
@@ -57,5 +54,10 @@ def serve():
     server.wait_for_termination()
 
 if __name__ == '__main__':
-    initialize()
-    serve()
+    setup_logging() # 初始化日志
+    try:
+        Qwen2TokenizerSingleton().initialize()  # 初始化分词器
+        serve() # 开始服务
+    except Exception as e:
+        logger.critical(f"TokenizerServicer fatal error: {e}", exc_info=True)
+        raise

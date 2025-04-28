@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from loguru import logger
 from llm import StreamLLMInference
 from vllm import SamplingParams
 import grpc
@@ -30,4 +31,5 @@ class OnlineInferenceServerServicer(ModelServerServiceServicer):
       async for delta in generator:
         yield pb.model_server_pb2.ChatCompletionResult(token_ids=delta)
     except Exception as e:
+      logger.error(f'[{request.trace_id}] OnlineInferenceServerServicer exception: {e}')
       await context.abort(grpc.StatusCode.INTERNAL, f"生成错误: {str(e)}")

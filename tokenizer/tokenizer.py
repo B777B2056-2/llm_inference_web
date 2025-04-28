@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 import config
+from loguru import logger
 import threading
 from transformers import AutoTokenizer
 
@@ -28,7 +29,6 @@ class Qwen2TokenizerSingleton:
             with self.__class__._lock:
                 if self._tokenizer is None:  # 双重检查锁定
                     try:
-                        print(f"Loading tokenizer: {self._model_name}")
                         self._tokenizer = AutoTokenizer.from_pretrained(
                             self._model_name,
                             use_fast=True,

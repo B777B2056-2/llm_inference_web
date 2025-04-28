@@ -1,0 +1,4 @@
+grpcio==1.71.0
+loguru==0.7.3
+protobuf==6.30.2
+transformers==4.47.0
