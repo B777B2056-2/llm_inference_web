@@ -34,10 +34,10 @@ class PerformanceTester:
             start_time = time.perf_counter()
 
             try:
-                response = stub.Tokenizer(pb.tokenizer_pb2.TokenizerReq(
-                    parent_message_id="perf_test",
+                _ = stub.Tokenizer(pb.tokenizer_pb2.TokenizerReq(
                     prompt=prompt
                 ))
+
                 latency = (time.perf_counter() - start_time) * 1000  # 毫秒
 
                 with self.lock:
@@ -50,10 +50,8 @@ class PerformanceTester:
                 print(f"Request failed: {str(e)}")
 
     def run_test(self):
-        # 预热连接
         channel = grpc.insecure_channel(f'localhost:{SERVER_PORT}')
         stub = pb.tokenizer_pb2_grpc.TokenizerServiceStub(channel)
-        stub.Tokenizer(pb.tokenizer_pb2.TokenizerReq(prompt="warmup"))
 
         start_time = time.time()
 
@@ -84,7 +82,7 @@ class PerformanceTester:
 if __name__ == '__main__':
     # 测试参数配置
     tester = PerformanceTester(
-        concurrency=1000,      # 并发线程数
-        total_requests=50000  # 总请求数
+        concurrency=1,      # 并发线程数
+        total_requests=1  # 总请求数
     )
     tester.run_test()

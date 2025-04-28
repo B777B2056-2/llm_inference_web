@@ -39,12 +39,23 @@ class TokenizerServiceStub(object):
                 request_serializer=tokenizer__pb2.TokenizerReq.SerializeToString,
                 response_deserializer=tokenizer__pb2.TokenizerResp.FromString,
                 _registered_method=True)
+        self.DeTokenizer = channel.unary_unary(
+                '/tokenizer.TokenizerService/DeTokenizer',
+                request_serializer=tokenizer__pb2.DeTokenizerReq.SerializeToString,
+                response_deserializer=tokenizer__pb2.DeTokenizerResult.FromString,
+                _registered_method=True)
 
 
 class TokenizerServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Tokenizer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeTokenizer(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -57,6 +68,11 @@ def add_TokenizerServiceServicer_to_server(servicer, server):
                     servicer.Tokenizer,
                     request_deserializer=tokenizer__pb2.TokenizerReq.FromString,
                     response_serializer=tokenizer__pb2.TokenizerResp.SerializeToString,
+            ),
+            'DeTokenizer': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeTokenizer,
+                    request_deserializer=tokenizer__pb2.DeTokenizerReq.FromString,
+                    response_serializer=tokenizer__pb2.DeTokenizerResult.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -86,6 +102,33 @@ class TokenizerService(object):
             '/tokenizer.TokenizerService/Tokenizer',
             tokenizer__pb2.TokenizerReq.SerializeToString,
             tokenizer__pb2.TokenizerResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeTokenizer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/tokenizer.TokenizerService/DeTokenizer',
+            tokenizer__pb2.DeTokenizerReq.SerializeToString,
+            tokenizer__pb2.DeTokenizerResult.FromString,
             options,
             channel_credentials,
             insecure,

@@ -10,8 +10,9 @@ import (
 
 var ResourceConfig struct {
 	Server struct {
-		HTTPPort int `yaml:"httpPort"`
-		GRPCPort int `yaml:"grpcPort"`
+		HTTPPort       int `yaml:"httpPort"`
+		GRPCPort       int `yaml:"grpcPort"`
+		MaxInputTokens int `yaml:"maxInputTokens"`
 	} `yaml:"server"`
 	Logger struct {
 		Level               string `yaml:"level"`
@@ -50,9 +51,16 @@ var ResourceConfig struct {
 		Addresses []struct {
 			Host string `yaml:"host"`
 			Port int    `yaml:"port"`
-		} `yaml:"addrs"`
+		} `yaml:"addresses"`
 		SendMsgTimeoutInMs int `yaml:"sendMsgTimeoutInMs"`
 		RecvMsgTimeoutInMs int `yaml:"recvMsgTimeoutInMs"`
+	}
+	MongoDB struct {
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+		User     string `yaml:"user"`
+		Password string `yaml:"pwd"`
+		DBName   string `yaml:"dbName"`
 	}
 }
 

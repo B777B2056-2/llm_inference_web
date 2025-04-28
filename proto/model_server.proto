@@ -4,13 +4,18 @@ option go_package = "./pb";
 
 message ChatCompletionReq {
   string chat_session_id = 1;
-  repeated uint32 input_ids = 2;
-  repeated uint32 attention_mask = 3;
+  float presence_penalty = 2;
+  float frequency_penalty = 3;
+  float repetition_penalty = 4;
+  float temperature = 5;
+  float top_p = 6;
+  int32 top_k = 7;
+  repeated uint64 token_ids = 8;
+  repeated uint64 token_type_ids = 9;
 }
 
 message ChatCompletionResult {
-  string answer = 1;
-  uint32 token_cnt = 2;
+  repeated uint64 token_ids = 1;
 }
 
 service ModelServerService {

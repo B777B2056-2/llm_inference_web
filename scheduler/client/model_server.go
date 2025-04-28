@@ -19,7 +19,7 @@ func NewModelServer() *ModelServer {
 	}
 }
 
-func (m *ModelServer) ChatCompletion(ctx context.Context, inputIDs, attentionMasks []uint32, chatSessionID string) (
+func (m *ModelServer) ChatCompletion(ctx context.Context, chatSessionID string, tokenIds, tokenTypeIds []uint64) (
 	grpc.ServerStreamingClient[pb.ChatCompletionResult], error) {
 	conn, err := grpc.NewClient(m.addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -28,7 +28,7 @@ func (m *ModelServer) ChatCompletion(ctx context.Context, inputIDs, attentionMas
 	defer func() { _ = conn.Close() }()
 	clt := pb.NewModelServerServiceClient(conn)
 	stream, err := clt.ChatCompletion(ctx, &pb.ChatCompletionReq{
-		InputIds: inputIDs, AttentionMask: attentionMasks, ChatSessionId: chatSessionID,
+		ChatSessionId: chatSessionID, TokenIds: tokenIds, TokenTypeIds: tokenTypeIds,
 	})
 	if err != nil {
 		return nil, err

@@ -3,16 +3,23 @@ package tokenizer;
 option go_package = "./pb";
 
 message TokenizerReq {
-  string parent_message_id  = 1;
-  string prompt = 2;
+  string prompt = 1;
 }
 
 message TokenizerResp {
-  repeated uint32 input_ids = 1;
-  repeated uint32 attention_mask = 2;
-  uint32 current_tokens_cnt = 3;
+  repeated uint64 token_ids = 1;
+  repeated uint64 token_type_ids = 2;
+}
+
+message DeTokenizerReq {
+  repeated uint64 token_ids = 1;
+}
+
+message DeTokenizerResult {
+  string text = 1;
 }
 
 service TokenizerService {
   rpc Tokenizer(TokenizerReq) returns (TokenizerResp);
+  rpc DeTokenizer(DeTokenizerReq) returns (DeTokenizerResult);
 }

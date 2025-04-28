@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	TokenizerService_Tokenizer_FullMethodName = "/tokenizer.TokenizerService/Tokenizer"
+	TokenizerService_Tokenizer_FullMethodName   = "/tokenizer.TokenizerService/Tokenizer"
+	TokenizerService_DeTokenizer_FullMethodName = "/tokenizer.TokenizerService/DeTokenizer"
 )
 
 // TokenizerServiceClient is the client API for TokenizerService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TokenizerServiceClient interface {
 	Tokenizer(ctx context.Context, in *TokenizerReq, opts ...grpc.CallOption) (*TokenizerResp, error)
+	DeTokenizer(ctx context.Context, in *DeTokenizerReq, opts ...grpc.CallOption) (*DeTokenizerResult, error)
 }
 
 type tokenizerServiceClient struct {
@@ -47,11 +49,22 @@ func (c *tokenizerServiceClient) Tokenizer(ctx context.Context, in *TokenizerReq
 	return out, nil
 }
 
+func (c *tokenizerServiceClient) DeTokenizer(ctx context.Context, in *DeTokenizerReq, opts ...grpc.CallOption) (*DeTokenizerResult, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeTokenizerResult)
+	err := c.cc.Invoke(ctx, TokenizerService_DeTokenizer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TokenizerServiceServer is the server API for TokenizerService service.
 // All implementations must embed UnimplementedTokenizerServiceServer
 // for forward compatibility.
 type TokenizerServiceServer interface {
 	Tokenizer(context.Context, *TokenizerReq) (*TokenizerResp, error)
+	DeTokenizer(context.Context, *DeTokenizerReq) (*DeTokenizerResult, error)
 	mustEmbedUnimplementedTokenizerServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedTokenizerServiceServer struct{}
 
 func (UnimplementedTokenizerServiceServer) Tokenizer(context.Context, *TokenizerReq) (*TokenizerResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Tokenizer not implemented")
+}
+func (UnimplementedTokenizerServiceServer) DeTokenizer(context.Context, *DeTokenizerReq) (*DeTokenizerResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeTokenizer not implemented")
 }
 func (UnimplementedTokenizerServiceServer) mustEmbedUnimplementedTokenizerServiceServer() {}
 func (UnimplementedTokenizerServiceServer) testEmbeddedByValue()                          {}
@@ -104,6 +120,24 @@ func _TokenizerService_Tokenizer_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TokenizerService_DeTokenizer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeTokenizerReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TokenizerServiceServer).DeTokenizer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TokenizerService_DeTokenizer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TokenizerServiceServer).DeTokenizer(ctx, req.(*DeTokenizerReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TokenizerService_ServiceDesc is the grpc.ServiceDesc for TokenizerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var TokenizerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Tokenizer",
 			Handler:    _TokenizerService_Tokenizer_Handler,
+		},
+		{
+			MethodName: "DeTokenizer",
+			Handler:    _TokenizerService_DeTokenizer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -8,6 +8,11 @@ import pb.tokenizer_pb2_grpc
 from tokenizer import Qwen2TokenizerSingleton
 
 
+def initialize():
+    # 初始化分词器
+    Qwen2TokenizerSingleton().initialize()
+
+
 class TokenizerServicer(pb.tokenizer_pb2_grpc.TokenizerServiceServicer):
     def __init__(self):
         self.tokenizer = Qwen2TokenizerSingleton.get_tokenizer()
@@ -15,10 +20,13 @@ class TokenizerServicer(pb.tokenizer_pb2_grpc.TokenizerServiceServicer):
     def Tokenizer(self, request, context):
         try:
             encoding = self.tokenizer(request.prompt)
+            input_ids = encoding.input_ids
+            token_type_ids = []
+            if "token_type_ids" in encoding.__dict__:
+                token_type_ids = encoding.token_type_ids
             return pb.tokenizer_pb2.TokenizerResp(
-                input_ids=encoding.input_ids,
-                attention_mask=encoding.attention_mask,
-                current_tokens_cnt=len(encoding.input_ids)
+                token_ids=input_ids,
+                token_type_ids=token_type_ids,
             )
 
         except Exception as e:
@@ -27,10 +35,17 @@ class TokenizerServicer(pb.tokenizer_pb2_grpc.TokenizerServiceServicer):
             context.set_details(f"Tokenizer error: {str(e)}")
             return pb.tokenizer_pb2.TokenizerResp()
 
-def serve():
-    # 初始化分词器
-    Qwen2TokenizerSingleton().initialize()
+    def DeTokenizer(self, request, context):
+        try:
+            text = self.tokenizer.decode(request.token_ids)
+            return pb.tokenizer_pb2.DeTokenizerResult(text=text)
+        except Exception as e:
+            # 错误处理
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Tokenizer error: {str(e)}")
+            return pb.tokenizer_pb2.DeTokenizerResult()
 
+def serve():
     # 启动服务
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=config.MAX_WORKS))
     pb.tokenizer_pb2_grpc.add_TokenizerServiceServicer_to_server(
@@ -42,4 +57,5 @@ def serve():
     server.wait_for_termination()
 
 if __name__ == '__main__':
+    initialize()
     serve()
