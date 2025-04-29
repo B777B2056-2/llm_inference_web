@@ -1,56 +1,30 @@
-FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04 as builder
+FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
-    PYTHON_VERSION=3.12
-
-RUN apt-get update && \
-    apt upgrade -y && \
-    apt install software-properties-common -y && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get install -y --no-install-recommends \
-    python${PYTHON_VERSION} \
-    python3-pip \
-    python${PYTHON_VERSION}-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/* \
-    && ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 \
-    && ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
-
-WORKDIR /app
-COPY requirements.txt .
-RUN python -m pip install --user -r requirements.txt
-
-FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
-
-ENV PYTHON_VERSION=3.12 \
-    PATH=/home/app/.local/bin:$PATH \
+    PYTHON_VERSION=3.10 \
     NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
-# 安装Python运行时
-RUN apt-get update && \
-    apt upgrade -y && \
-    apt install software-properties-common -y && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get install -y --no-install-recommends \
-    python${PYTHON_VERSION} \
-    python3-pip \
-    && rm -rf /var/lib/apt/lists/* \
-    && ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 \
-    && ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
+RUN echo "">sources.list && \
+    echo "deb http://ftp2.cn.debian.org/debian/ buster main">>sources.list && \
+    echo "deb http://ftp2.cn.debian.org/debian/debian-security buster/updates main">>sources.list && \
+    echo "deb http://ftp2.cn.debian.org/debian/debian buster-updates main">>sources.list
 
-RUN groupadd -r app && useradd -r -g app app
-USER app
+RUN apt update && \
+    apt install -y --no-install-recommends && \
+    apt install -y python${PYTHON_VERSION} && \
+    apt-get install -y python3-pip && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder --chown=app:app /root/.local /home/app/.local
+RUN python3 --version
 
-WORKDIR /home/app
-COPY --chown=app:app . .
+WORKDIR /app
+COPY . .
 
-ENV PYTHONPATH=/home/app
+RUN python3 -m pip install --user -r requirements.txt
 
 EXPOSE 9001
 
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
