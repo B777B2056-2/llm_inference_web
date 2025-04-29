@@ -30,7 +30,7 @@ mysql:
   port: 3306
   username: "root"
   pwd: "your_password"
-  dbName: "user_center"
+  dbName: "chat"
   maxIdleConns: 5
   maxOpenConns: 10
   connMaxLifetimeInSecond: 3
@@ -38,9 +38,9 @@ mysql:
 kafka:
   addresses:
     - host: "127.0.0.1"
-      port: 3306
-  sendMsgTimeoutInMs: 50
-  recvMsgTimeoutInMs: 50
+      port: 9092
+  sendMsgTimeoutInMs: 3000
+  recvMsgTimeoutInMs: 3000
 
 mongodb:
   host: "127.0.0.1"

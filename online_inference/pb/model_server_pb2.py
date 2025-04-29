@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12model_server.proto\x12\x0cmodel_server\"\xdb\x01\n\x11\x43hatCompletionReq\x12\x17\n\x0f\x63hat_session_id\x18\x01 \x01(\t\x12\x18\n\x10presence_penalty\x18\x02 \x01(\x02\x12\x19\n\x11\x66requency_penalty\x18\x03 \x01(\x02\x12\x1a\n\x12repetition_penalty\x18\x04 \x01(\x02\x12\x13\n\x0btemperature\x18\x05 \x01(\x02\x12\r\n\x05top_p\x18\x06 \x01(\x02\x12\r\n\x05top_k\x18\x07 \x01(\x05\x12\x11\n\ttoken_ids\x18\x08 \x03(\x04\x12\x16\n\x0etoken_type_ids\x18\t \x03(\x04\")\n\x14\x43hatCompletionResult\x12\x11\n\ttoken_ids\x18\x01 \x01(\t2m\n\x12ModelServerService\x12W\n\x0e\x43hatCompletion\x12\x1f.model_server.ChatCompletionReq\x1a\".model_server.ChatCompletionResult0\x01\x42\x06Z\x04./pbb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12model_server.proto\x12\x0cmodel_server\"\xed\x01\n\x11\x43hatCompletionReq\x12\x17\n\x0f\x63hat_session_id\x18\x01 \x01(\t\x12\x18\n\x10presence_penalty\x18\x02 \x01(\x02\x12\x19\n\x11\x66requency_penalty\x18\x03 \x01(\x02\x12\x1a\n\x12repetition_penalty\x18\x04 \x01(\x02\x12\x13\n\x0btemperature\x18\x05 \x01(\x02\x12\r\n\x05top_p\x18\x06 \x01(\x02\x12\r\n\x05top_k\x18\x07 \x01(\x05\x12\x11\n\ttoken_ids\x18\x08 \x03(\x04\x12\x16\n\x0etoken_type_ids\x18\t \x03(\x04\x12\x10\n\x08trace_id\x18\n \x01(\t\")\n\x14\x43hatCompletionResult\x12\x11\n\ttoken_ids\x18\x01 \x03(\x04\x32m\n\x12ModelServerService\x12W\n\x0e\x43hatCompletion\x12\x1f.model_server.ChatCompletionReq\x1a\".model_server.ChatCompletionResult0\x01\x42\x06Z\x04./pbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,9 +33,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z\004./pb'
   _globals['_CHATCOMPLETIONREQ']._serialized_start=37
-  _globals['_CHATCOMPLETIONREQ']._serialized_end=256
-  _globals['_CHATCOMPLETIONRESULT']._serialized_start=258
-  _globals['_CHATCOMPLETIONRESULT']._serialized_end=299
-  _globals['_MODELSERVERSERVICE']._serialized_start=301
-  _globals['_MODELSERVERSERVICE']._serialized_end=410
+  _globals['_CHATCOMPLETIONREQ']._serialized_end=274
+  _globals['_CHATCOMPLETIONRESULT']._serialized_start=276
+  _globals['_CHATCOMPLETIONRESULT']._serialized_end=317
+  _globals['_MODELSERVERSERVICE']._serialized_start=319
+  _globals['_MODELSERVERSERVICE']._serialized_end=428
 # @@protoc_insertion_point(module_scope)

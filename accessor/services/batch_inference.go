@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
 	"github.com/segmentio/kafka-go"
@@ -39,32 +38,18 @@ func (b *BatchInferenceOperator) CreateTask(ctx *gin.Context, param dto.CreateBa
 	// 塞入kafka
 	productor := client.NewKafkaProductorClient(client.TopicBatchInferenceRequests)
 	traceId, _ := ctx.Get("trace_id")
-	inferenceParamsJson, _ := json.Marshal(param)
-	promptsJson, _ := json.Marshal(param.Prompts)
+	payload := dto.BatchInferenceKafkaPayload{
+		TraceId:            traceId.(string),
+		BatchInferenceId:   taskId,
+		BatchInferenceName: param.BatchInferenceName,
+		UserId:             b.userID,
+		SamplingParams:     param.InferenceParams,
+		Prompts:            param.Prompts,
+	}
+	payloadBytes, _ := json.Marshal(payload)
 	msgs := []kafka.Message{
 		{
-			Key:   []byte("trace_id"),
-			Value: []byte(traceId.(string)),
-		},
-		{
-			Key:   []byte("batch_inference_id"),
-			Value: []byte(taskId),
-		},
-		{
-			Key:   []byte("batch_inference_name"),
-			Value: []byte(param.BatchInferenceName),
-		},
-		{
-			Key:   []byte("user_id"),
-			Value: []byte(fmt.Sprintf("%d", b.userID)),
-		},
-		{
-			Key:   []byte("sampling_params"),
-			Value: inferenceParamsJson,
-		},
-		{
-			Key:   []byte("prompts"),
-			Value: promptsJson,
+			Value: payloadBytes,
 		},
 	}
 	return productor.Send(ctx, msgs)

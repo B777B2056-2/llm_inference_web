@@ -30,7 +30,7 @@ func (c ChatHistory) TableName() string {
 	return "chat_history"
 }
 
-func (c ChatHistory) BeforeCreate(_ *gorm.DB) error {
+func (c *ChatHistory) BeforeCreate(tx *gorm.DB) error {
 	c.Status = ChatStatusDoing
 	if c.ChatSessionID == "" {
 		id, err := uuid.NewV4()

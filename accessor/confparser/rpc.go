@@ -9,7 +9,7 @@ import (
 var RPCConfig struct {
 	Tokenizer struct {
 		Host string `yaml:"host"`
-		Port string `yaml:"port"`
+		Port uint16 `yaml:"port"`
 	} `yaml:"tokenizer"`
 	ModelServer struct {
 		Host string `yaml:"host"`
@@ -22,7 +22,7 @@ func InitRPCConfig(filePath string) {
 	if err != nil {
 		panic(fmt.Errorf("read config file [%s] error: %v", filePath, err))
 	}
-	err = yaml.Unmarshal(file, &Errors)
+	err = yaml.Unmarshal(file, &RPCConfig)
 	if err != nil {
 		panic(fmt.Errorf("unmarshal config file [%s] error: %v", filePath, err))
 	}

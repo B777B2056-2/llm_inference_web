@@ -39,9 +39,11 @@ func (o *OnlineInferenceOperator) ChatCompletion(ctx *gin.Context, params *dto.C
 	}
 
 	// 调用模型服务，开启流式传输
-	modelAnswerStream, err := client.NewModelServer().ChatCompletion(
+	modelSrvClt := client.NewModelServer()
+	modelAnswerStream, err := modelSrvClt.ChatCompletion(
 		ctx, params.ChatSessionId, tokenIds, tokenTypeIds, params.InferenceParams,
 	)
+	defer modelSrvClt.CloseChatCompletionStream()
 	if err != nil {
 		return err
 	}
@@ -61,8 +63,7 @@ func (o *OnlineInferenceOperator) ChatCompletion(ctx *gin.Context, params *dto.C
 		if err != nil {
 			if err == io.EOF {
 				flusher.Flush()
-				_ = dao.NewChatHistoryDao().UpdateAnswer(historyID, modelAnswer, answerTokensCnt)
-				return nil
+				return dao.NewChatHistoryDao().UpdateAnswer(historyID, modelAnswer, answerTokensCnt)
 			}
 			resource.Logger.WithFields(
 				logrus.Fields{
@@ -72,13 +73,19 @@ func (o *OnlineInferenceOperator) ChatCompletion(ctx *gin.Context, params *dto.C
 				},
 			).Error("read from model server failed")
 			flusher.Flush()
-			_ = dao.NewChatHistoryDao().UpdateStatus2Failed(historyID)
-			return err
+			return dao.NewChatHistoryDao().UpdateStatus2Failed(historyID)
 		}
 		// 解码
 		assistantTokenIds := resp.GetTokenIds()
 		data, err := client.NewTokenizer().Decode(ctx, assistantTokenIds)
 		if err != nil {
+			resource.Logger.WithFields(
+				logrus.Fields{
+					"userID":        o.userId,
+					"chatSessionID": params.ChatSessionId,
+					"error":         err.Error(),
+				},
+			).Error("tokenizer decode failed")
 			return err
 		}
 		answerTokensCnt += len(assistantTokenIds)

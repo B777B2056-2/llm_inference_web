@@ -11,7 +11,8 @@ import (
 )
 
 type ModelServer struct {
-	addr string
+	addr       string
+	streamConn *grpc.ClientConn
 }
 
 func NewModelServer() *ModelServer {
@@ -26,7 +27,7 @@ func (m *ModelServer) ChatCompletion(ctx context.Context, chatSessionID string, 
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = conn.Close() }()
+	m.streamConn = conn
 	clt := pb.NewModelServerServiceClient(conn)
 	traceId, ok := ctx.Value("trace_id").(string)
 	if !ok {
@@ -48,4 +49,8 @@ func (m *ModelServer) ChatCompletion(ctx context.Context, chatSessionID string, 
 		return nil, err
 	}
 	return stream, nil
+}
+
+func (m *ModelServer) CloseChatCompletionStream() {
+	_ = m.streamConn.Close()
 }

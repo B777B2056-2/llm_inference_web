@@ -12,10 +12,10 @@ from vllm.config import KVTransferConfig
 class Prefill(object):
   def __init__(self, model: str):
     kv_conf_dict = {
-      "kv_connector": VLLM_CONFIG["kv_connector"],
+      "kv_connector": VLLM_CONFIG["kv_cache"]["kv_connector"],
       "kv_role": "kv_producer",
-      "kv_rank": VLLM_CONFIG["kv_rank"],
-      "kv_parallel_size": VLLM_CONFIG["kv_parallel_size"]
+      "kv_rank": VLLM_CONFIG["kv_cache"]["kv_rank"],
+      "kv_parallel_size": VLLM_CONFIG["kv_cache"]["kv_parallel_size"]
     }
     ktc = KVTransferConfig.from_cli(str(kv_conf_dict))
     self.llm = LLM(model=model,

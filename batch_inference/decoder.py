@@ -13,10 +13,10 @@ from vllm.config import KVTransferConfig
 class Decoder(object):
   def __init__(self, model: str):
     kv_conf_dict = {
-      "kv_connector": VLLM_CONFIG["kv_connector"],
+      "kv_connector": VLLM_CONFIG["kv_cache"]["kv_connector"],
       "kv_role": "kv_consumer",
-      "kv_rank": VLLM_CONFIG["kv_rank"],
-      "kv_parallel_size": VLLM_CONFIG["kv_parallel_size"]
+      "kv_rank": VLLM_CONFIG["kv_cache"]["kv_rank"],
+      "kv_parallel_size": VLLM_CONFIG["kv_cache"]["kv_parallel_size"]
     }
     ktc = KVTransferConfig.from_cli(str(kv_conf_dict))
     self.llm = LLM(model=model,
@@ -51,6 +51,6 @@ def run(q: Queue) -> None:
       trace_id = param["trace_id"]
       results = d.do_decoder(sampling_params=param["sampling_params"], prompts=param["prompts"])
       # 存入数据库
-      database.insert_results(id=param["id"], user_id=param["user_id"], results=results)
+      database.insert_results(id=param["id"], name=param["name"], user_id=param["user_id"], results=results)
     except Exception as e:
       logger.error(f'[{trace_id}] Batch Inference Decoder Error: {e}')
