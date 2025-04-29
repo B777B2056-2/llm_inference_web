@@ -10,7 +10,7 @@ def setup_logging():
     os.makedirs(config.LOGGER["outputPath"], exist_ok=True)
     retention = timedelta(days=config.LOGGER["maxStorageAgeInDays"])
     logger.add(
-        sink=os.path.join(config.LOGGER["outputPath"], "tokenizer.log"),
+        sink=os.path.join(config.LOGGER["outputPath"], "online_inference.log"),
         format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
         retention=retention,
         rotation=f'{config.LOGGER["maxSingleFileSizeMB"]} MB',

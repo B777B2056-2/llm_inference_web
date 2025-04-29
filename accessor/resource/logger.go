@@ -36,7 +36,7 @@ func initLogger() {
 	}
 
 	lumberjackLogger := &lumberjack.Logger{
-		Filename:   path.Join(confparser.ResourceConfig.Logger.OutPutPath, "gateway.log"),
+		Filename:   path.Join(confparser.ResourceConfig.Logger.OutPutPath, "accessor.log"),
 		MaxSize:    confparser.ResourceConfig.Logger.MaxSingleFileSizeMB,
 		MaxBackups: confparser.ResourceConfig.Logger.MaxBackups,
 		MaxAge:     confparser.ResourceConfig.Logger.MaxStorageAgeInDays,
