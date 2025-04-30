@@ -23,7 +23,7 @@ RUN python3 --version
 WORKDIR /app
 COPY . .
 
-RUN python3 -m pip install --user -r requirements.txt
+RUN python3 -m pip install --user -r requirements.txt --use-deprecated=legacy-resolver
 
 EXPOSE 9001
 
