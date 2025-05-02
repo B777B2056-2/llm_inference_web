@@ -11,4 +11,4 @@ WORKDIR /app
 COPY --from=builder /app/ .
 EXPOSE 8083
 EXPOSE 8084
-CMD [ "/app/bin/accessor", "--errorConf", "conf/errors.yml", "--resourceConf", "conf/resource.yml", "--rpcConf", "conf/rpc.yml"]
+CMD [ "/app/bin/accessor", "--resourceConf", "conf/resource.yml", "--rpcConf", "conf/rpc.yml"]

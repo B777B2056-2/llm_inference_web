@@ -1,0 +1,636 @@
+# k8s configmap
+apiVersion: v1
+data:
+  proxy.yml: |
+    blackedIPs: []
+
+    backends:
+      - svcName: "usercenter-svc:8081"
+        groupName: "user"
+        protocol: "http"
+        needRefreshToken: false
+        loadBalanceStrategy: "RoundRobin"
+        connTimeout: 1000
+        responseTimeout: 2000
+        breaker:
+          enable: true
+          maxFailures: 10
+          openStateTimeInSeconds: 10000
+          halfOpenStateMaxRequests: 10
+          halfOpenSuccessThreshold: 5
+        needAuthURLs: ["/user/logout"]
+      - svcName: "accessor-svc:8083"
+        groupName: "accessor"
+        protocol: "http"
+        needRefreshToken: true
+        loadBalanceStrategy: "RoundRobin"
+        connTimeout: 1000
+        responseTimeout: 2000
+        breaker:
+          enable: true
+          maxFailures: 10
+          openStateTimeInSeconds: 10000
+          halfOpenStateMaxRequests: 10
+          halfOpenSuccessThreshold: 5
+        needAuthURLs: 
+          - "/chat/completion"
+          - "/chat/history"
+          - "/batchInference/create"
+          - "/batchInference/results"
+        needRateLimitURLConf:
+          - uri: "/chat/completion"
+            bucketSize: 100
+            tokenPerSecond: 100
+          - uri: "/chat/history"
+            bucketSize: 100
+            tokenPerSecond: 100
+          - uri: "/batchInference/create"
+            bucketSize: 100
+            tokenPerSecond: 100
+          - uri: "/batchInference/results"
+            bucketSize: 100
+            tokenPerSecond: 100
+        needRateLimitUserConf:
+          - uri: "/chat/completion"
+            bucketSize: 100
+            tokenPerSecond: 100
+          - uri: "/chat/history"
+            bucketSize: 100
+            tokenPerSecond: 100
+          - uri: "/batchInference/create"
+            bucketSize: 100
+            tokenPerSecond: 100
+          - uri: "/batchInference/results"
+            bucketSize: 100
+            tokenPerSecond: 100
+    rpc:
+      user_center:
+        host: "usercenter-svc"
+        port: 8082
+  resource.yml: |
+    server: 
+      port: 8080
+    logger:
+      level: debug
+      outputPath: "output/logs"
+      maxSingleFileSizeMB: 100
+      maxBackups: 1
+      maxStorageAgeInDays: 7
+    redis:  
+      host: "redis-svc"  
+      port: 6379  
+      pwd: "123456"  
+      db: 0
+      poolSize: 10
+      dialTimeoutSecond: 5
+      readTimeoutSecond: 3
+      writeTimeoutSecond: 3
+      connMaxRetries: 3
+      txMaxRetries: 3
+    lock:
+      maxRetries: 2
+      retryDelayMs: 250
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: gateway-config
+  namespace: llm-web
+---
+apiVersion: v1
+data:
+  errors.yml: |
+    - code: 1001
+      msg: "用户不存在"
+    - code: 1002
+      msg: "用户名或密码错误"
+    - code: 1003
+      msg: "验证码错误"
+    - code: 1004
+      msg: "用户已存在"
+  resource.yml: |
+    server:
+      httpPort: 8081
+      grpcPort: 8082
+      tokenSecretKey: "ertyhujbvcxdcfvgbhnjm"
+      tokenExpirationInSecond: 600
+      captchaExpirationInSecond: 65
+
+    logger:
+      level: "debug"
+      outputPath: "output/logs"
+      maxSingleFileSizeMB: 100
+      maxBackups: 1
+      maxStorageAgeInDays: 7
+
+    redis:
+      host: "redis-svc"
+      port: 6379
+      pwd: "123456"
+      db: 0
+      poolSize: 10
+      dialTimeoutSecond: 5
+      readTimeoutSecond: 3
+      writeTimeoutSecond: 3
+      connMaxRetries: 3
+      txMaxRetries: 3
+      lock:
+        maxRetries: 2
+        retryDelayMs: 250
+
+    mysql:
+      host: "mysql-svc"
+      port: 3306
+      username: "root"
+      pwd: "your_password"
+      dbName: "user_center"
+      maxIdleConns: 5
+      maxOpenConns: 10
+      connMaxLifetimeInSecond: 3
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: usercenter-config
+  namespace: llm-web
+---
+apiVersion: v1
+data:
+  resource.yml: |
+    server:
+      httpPort: 8083
+      maxInputTokens: 4096
+
+    logger:
+      level: "debug"
+      outputPath: "output/logs"
+      maxSingleFileSizeMB: 100
+      maxBackups: 1
+      maxStorageAgeInDays: 7
+
+    redis:
+      host: "redis-svc"
+      port: 6379
+      pwd: "123456"
+      db: 0
+      poolSize: 10
+      dialTimeoutSecond: 5
+      readTimeoutSecond: 3
+      writeTimeoutSecond: 3
+      connMaxRetries: 3
+      txMaxRetries: 3
+      lock:
+        maxRetries: 2
+        retryDelayMs: 250
+
+    mysql:
+      host: "mysql-svc"
+      port: 3306
+      username: "root"
+      pwd: "your_password"
+      dbName: "chat"
+      maxIdleConns: 5
+      maxOpenConns: 10
+      connMaxLifetimeInSecond: 3
+
+    kafka:
+      addresses:
+        - host: "kafka-svc"
+          port: 9092
+      sendMsgTimeoutInMs: 3000
+      recvMsgTimeoutInMs: 3000
+
+    mongodb:
+      host: "mongo-svc"
+      port: 27017
+      user: "root"
+      pwd: "123456"
+      dbName: "batch_inference"
+  rpc.yml: |-
+    tokenizer:
+      host: "tokenizer-svc"
+      port: 9000
+
+    model_server:
+      host: "online-inference-svc"
+      port: 9001
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: accessor-config
+  namespace: llm-web
+---
+apiVersion: v1
+data:
+  config.py: |
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    SERVER_PORT = 9000
+    MAX_WORKS = 10
+    MODEL_NAME = "Qwen/Qwen2-0.5B"
+    LOGGER = {
+        "level": "debug",
+        "outputPath": "output/logs",
+        "maxSingleFileSizeMB": 100,
+        "maxBackups": 1,
+        "maxStorageAgeInDays": 7,
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: tokenizer-config
+  namespace: llm-web
+---
+apiVersion: v1
+data:
+  config.py: |
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    SERVER_PORT = 9001
+    MODEL = "Qwen/Qwen2-0.5B"
+    MAX_TOKENS = 4096
+    LOGGER = {
+        "level": "debug",
+        "outputPath": "output/logs",
+        "maxSingleFileSizeMB": 100,
+        "maxBackups": 1,
+        "maxStorageAgeInDays": 7,
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: online-inference-config
+  namespace: llm-web
+---
+apiVersion: v1
+data:
+  config.py: |
+    #!/usr/bin/env python
+    # -*- coding: UTF-8 -*-
+    VLLM_CONFIG = {
+        "model": "Qwen/Qwen2-0.5B",
+        "max_model_len": 2000,
+        "gpu_memory_utilization": 0.8,
+        "kv_cache": {
+            "kv_connector": "PyNcclConnector",
+            "kv_rank": 1,
+            "kv_parallel_size": 2
+        }
+    }
+    KAFKA_CONFIG = {
+        "bootstrap_servers": "kafka-svc:9092",  # Kafka服务器地址
+        "group_id": "llm-batch-inference-workers",  # 消费组ID
+        "auto_offset_reset": "latest",  # 从最新位置开始消费
+        "topic": "batch-inference-requests"  # 订阅的主题
+    }
+    MONGO_CONFIG = {
+        "host": "mongo-svc",
+        "port": 27017,
+        "user": "root",
+        "password": "123456",
+        "db": "batch_inference",
+        "collection": "batch_inference_results",
+    }
+    LOGGER = {
+        "level": "debug",
+        "outputPath": "output/logs",
+        "maxSingleFileSizeMB": 100,
+        "maxBackups": 1,
+        "maxStorageAgeInDays": 7,
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: batch-inference-config
+  namespace: llm-web
+---
+# k8s deployment：用于pod资源管理，比如pod扩缩容、滚动更新等
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  namespace: llm-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: llmgateway:1.0
+          imagePullPolicy: Never  # 使用本地镜像，而非从远程镜像仓库拉取
+          ports:
+            - name: http
+              containerPort: 8080 # 容器监听的port
+          # 挂载两个 Volume
+          volumeMounts:
+            - name: gateway-data-volume    # 挂载 PVC
+              mountPath: /app/output       # PVC 挂载容器内的路径
+            - name: gateway-config-volume  # 挂载 ConfigMap
+              mountPath: /app/conf         # ConfigMap 挂载容器内的路径
+      volumes:
+        - name: gateway-data-volume
+          persistentVolumeClaim:
+            claimName: gateway-pvc
+        - name: gateway-config-volume
+          configMap:
+            name: gateway-config  # 必须与已创建的 ConfigMap 名称一致
+            optional: false  # 如果 ConfigMap 不存在，Pod 启动会失败（默认行为）
+            defaultMode: 0644  # 设置文件权限（默认是 644）
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usercenter-deployment
+  namespace: llm-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: usercenter
+  template:
+    metadata:
+      labels:
+        app: usercenter
+    spec:
+      containers:
+        - name: usercenter
+          image: usercenter:1.0
+          imagePullPolicy: Never
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - name: usercenter-data-volume
+              mountPath: /app/output
+            - name: usercenter-config-volume
+              mountPath: /app/conf
+      volumes:
+        - name: usercenter-data-volume
+          persistentVolumeClaim:
+            claimName: usercenter-pvc
+        - name: usercenter-config-volume
+          configMap:
+            name: usercenter-config
+            optional: false
+            defaultMode: 0644
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accessor-deployment
+  namespace: llm-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: accessor
+  template:
+    metadata:
+      labels:
+        app: accessor
+    spec:
+      containers:
+        - name: accessor
+          image: accessor:1.0
+          imagePullPolicy: Never
+          ports:
+            - name: http
+              containerPort: 8083
+          volumeMounts:
+            - name: accessor-data-volume
+              mountPath: /app/output
+            - name: accessor-config-volume
+              mountPath: /app/conf
+      volumes:
+        - name: accessor-data-volume
+          persistentVolumeClaim:
+            claimName: accessor-pvc
+        - name: accessor-config-volume
+          configMap:
+            name: accessor-config
+            optional: false
+            defaultMode: 0644
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tokenizer-deployment
+  namespace: llm-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tokenizer
+  template:
+    metadata:
+      labels:
+        app: tokenizer
+    spec:
+      nodeSelector:
+        gpu: "true"  # 强制调度到 GPU 节点
+      containers:
+        - name: tokenizer
+          image: tokenizer:1.0
+          imagePullPolicy: Never
+          ports:
+            - name: grpc
+              containerPort: 9000
+          resources:
+            limits:
+              nvidia.com/gpu: "1"  # 声明 GPU 资源
+          volumeMounts:
+            - name: tokenizer-data-volume
+              mountPath: /app/output
+            - name: tokenizer-config-volume
+              mountPath: /app/conf
+      volumes:
+        - name: tokenizer-data-volume
+          persistentVolumeClaim:
+            claimName: tokenizer-pvc
+        - name: tokenizer-config-volume
+          configMap:
+            name: tokenizer-config
+            optional: false
+            defaultMode: 0644
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-inference-deployment
+  namespace: llm-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: online-inference
+  template:
+    metadata:
+      labels:
+        app: online-inference
+    spec:
+      nodeSelector:
+        gpu: "true"
+      containers:
+        - name: online-inference
+          image: online-inference:1.0
+          imagePullPolicy: Never
+          ports:
+            - name: grpc
+              containerPort: 9001
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+          volumeMounts:
+            - name: online-inference-data-volume
+              mountPath: /app/output
+            - name: online-inference-config-volume
+              mountPath: /app/conf
+      volumes:
+        - name: online-inference-data-volume
+          persistentVolumeClaim:
+            claimName: online-inference-pvc
+        - name: online-inference-config-volume
+          configMap:
+            name: online-inference-config
+            optional: false
+            defaultMode: 0644
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: batch-inference-deployment
+  namespace: llm-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: batch-inference
+  template:
+    metadata:
+      labels:
+        app: batch-inference
+    spec:
+      nodeSelector:
+        gpu: "true"
+      containers:
+        - name: batch-inference
+          image: batch-inference:1.0
+          imagePullPolicy: Never
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+          volumeMounts:
+            - name: batch-inference-data-volume
+              mountPath: /app/output
+            - name: batch-inference-config-volume
+              mountPath: /app/conf
+      volumes:
+        - name: batch-inference-data-volume
+          persistentVolumeClaim:
+            claimName: batch-inference-pvc
+        - name: batch-inference-config-volume
+          configMap:
+            name: batch-inference-config
+            optional: false
+            defaultMode: 0644
+
+---
+# k8s service定义：用于pod网络管理与内部服务发现，提供网络负载均衡（四层均衡，即TCP层面的流量均衡）
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-svc
+  namespace: llm-web
+spec:
+  type: ClusterIP
+  selector:
+    app: gateway
+  ports:
+    - protocol: TCP
+      port: 80          # 暴露在cluster ip上的端口
+      targetPort: 8080  # pod上服务监听的端口
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usercenter-svc
+  namespace: llm-web
+spec:
+  type: ClusterIP  # 默认类型，可省略显式声明
+  selector:
+    app: usercenter
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082  # 映射到容器端口
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accessor-svc
+  namespace: llm-web
+spec:
+  selector:
+    app: accessor
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tokenizer-svc
+  namespace: llm-web
+spec:
+  selector:
+    app: tokenizer
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: online-inference-svc
+  namespace: llm-web
+spec:
+  selector:
+    app: online-inference
+  ports:
+    - protocol: TCP
+      port: 9001
+      targetPort: 9001
+
+---
+# k8s ingress：提供7层负载均衡（即http应用层协议的负载均衡，类似nginx），将外部http请求路由到内部服务
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: llm-ingress
+  namespace: llm-web
+spec:
+  rules:
+    - host: jr.llm.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 80

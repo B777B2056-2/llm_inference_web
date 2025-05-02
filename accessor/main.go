@@ -11,13 +11,11 @@ import (
 
 var (
 	// 命令行参数
-	errorConfigPath    string
 	resourceConfigPath string
 	rpcConfigPath      string
 )
 
 func parseArgs() {
-	flag.StringVar(&errorConfigPath, "errorConf", "conf/errors.yml", "path to error config file")
 	flag.StringVar(&resourceConfigPath, "resourceConf", "conf/resource.yml", "path to resource config file")
 	flag.StringVar(&rpcConfigPath, "rpcConf", "conf/rpc.yml", "path to rpc config file")
 	flag.Parse()
@@ -26,7 +24,6 @@ func parseArgs() {
 func main() {
 	parseArgs()
 
-	confparser.InitErrorConfig(errorConfigPath)
 	confparser.InitResourceConfig(resourceConfigPath)
 	confparser.InitRPCConfig(rpcConfigPath)
 	resource.Init()

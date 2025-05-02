@@ -2,6 +2,7 @@ package resource
 
 import (
 	"fmt"
+	"io"
 	"llm_online_inference/usercenter/confparser"
 	"os"
 	"path"
@@ -42,7 +43,7 @@ func initLogger() {
 		MaxAge:     confparser.ResourceConfig.Logger.MaxStorageAgeInDays,
 		Compress:   true,
 	}
-	Logger.SetOutput(lumberjackLogger)
+	Logger.SetOutput(io.MultiWriter(os.Stdout, lumberjackLogger))
 }
 
 // TraceIdHook 用于在日志中添加 traceId

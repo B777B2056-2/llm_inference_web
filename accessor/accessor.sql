@@ -1,0 +1,21 @@
+CREATE TABLE `chat_history` (
+    `id` int unsigned NOT NULL AUTO_INCREMENT,
+    `created_at` datetime NOT NULL,
+    `updated_at` datetime NOT NULL,
+    `deleted_at` datetime DEFAULT NULL,
+    `chat_session_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ID',
+    `message_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ID',
+    `parent_message_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ID',
+    `user_id` int NOT NULL COMMENT 'ID',
+    `prompt` text COLLATE utf8mb4_unicode_ci NOT NULL,
+    `answer` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'AI',
+    `prompt_token_cnt` int NOT NULL COMMENT 'token',
+    `answer_token_cnt` int NOT NULL COMMENT 'token',
+    `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `idx_chat_session_id` (`chat_session_id`),
+    UNIQUE INDEX `idx_message_id` (`message_id`),
+    KEY `idx_chat_histories_deleted_at` (`deleted_at`),
+    KEY `idx_prompt_token_cnt` (`prompt_token_cnt`),
+    KEY `idx_status` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

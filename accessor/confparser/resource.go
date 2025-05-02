@@ -11,7 +11,6 @@ import (
 var ResourceConfig struct {
 	Server struct {
 		HTTPPort       int `yaml:"httpPort"`
-		GRPCPort       int `yaml:"grpcPort"`
 		MaxInputTokens int `yaml:"maxInputTokens"`
 	} `yaml:"server"`
 	Logger struct {

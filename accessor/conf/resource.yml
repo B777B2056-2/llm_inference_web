@@ -1,6 +1,5 @@
 server:
   httpPort: 8083
-  grpcPort: 8084
   maxInputTokens: 4096
 
 logger:
