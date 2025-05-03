@@ -1,4 +1,4 @@
-module llm_online_inference/accessor
+module llm_inference_web/accessor
 
 go 1.24.2
 

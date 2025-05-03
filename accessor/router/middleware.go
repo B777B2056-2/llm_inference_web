@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"llm_online_inference/accessor/resource"
+	"llm_inference_web/accessor/resource"
 	"net/http"
 	"strconv"
 )

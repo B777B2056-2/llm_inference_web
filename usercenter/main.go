@@ -6,12 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"llm_online_inference/usercenter/pb"
-	"llm_online_inference/usercenter/server"
+	"llm_inference_web/usercenter/pb"
+	"llm_inference_web/usercenter/server"
 
-	"llm_online_inference/usercenter/confparser"
-	"llm_online_inference/usercenter/resource"
-	"llm_online_inference/usercenter/router"
+	"llm_inference_web/usercenter/confparser"
+	"llm_inference_web/usercenter/resource"
+	"llm_inference_web/usercenter/router"
 	"net"
 )
 

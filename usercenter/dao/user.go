@@ -2,7 +2,7 @@ package dao
 
 import (
 	"gorm.io/gorm"
-	"llm_online_inference/usercenter/resource"
+	"llm_inference_web/usercenter/resource"
 )
 
 type User struct {

@@ -3,7 +3,7 @@ package dao
 import (
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"
-	"llm_online_inference/accessor/resource"
+	"llm_inference_web/accessor/resource"
 )
 
 const (

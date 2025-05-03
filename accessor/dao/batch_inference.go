@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"llm_online_inference/accessor/resource"
+	"llm_inference_web/accessor/resource"
 )
 
 type BatchInferenceResult struct {

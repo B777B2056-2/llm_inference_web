@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"llm_online_inference/accessor/resource"
+	"llm_inference_web/accessor/resource"
 	"net/http"
 
-	"llm_online_inference/accessor/dto"
-	"llm_online_inference/accessor/services"
+	"llm_inference_web/accessor/dto"
+	"llm_inference_web/accessor/services"
 
 	"github.com/gin-gonic/gin"
 )

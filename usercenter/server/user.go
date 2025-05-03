@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"llm_online_inference/usercenter/pb"
-	"llm_online_inference/usercenter/services"
-	"llm_online_inference/usercenter/utils"
+	"llm_inference_web/usercenter/pb"
+	"llm_inference_web/usercenter/services"
+	"llm_inference_web/usercenter/utils"
 )
 
 type UserCenterServer struct {

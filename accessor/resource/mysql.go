@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"llm_online_inference/accessor/confparser"
+	"llm_inference_web/accessor/confparser"
 	"time"
 )
 

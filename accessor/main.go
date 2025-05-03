@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"llm_online_inference/accessor/confparser"
-	"llm_online_inference/accessor/resource"
-	"llm_online_inference/accessor/router"
+	"llm_inference_web/accessor/confparser"
+	"llm_inference_web/accessor/resource"
+	"llm_inference_web/accessor/router"
 )
 
 var (

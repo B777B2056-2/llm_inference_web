@@ -3,7 +3,7 @@ package resource
 import (
 	"fmt"
 	"io"
-	"llm_online_inference/usercenter/confparser"
+	"llm_inference_web/usercenter/confparser"
 	"os"
 	"path"
 

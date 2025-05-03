@@ -1,4 +1,4 @@
-module llm_online_inference/usercenter
+module llm_inference_web/usercenter
 
 go 1.24.2
 

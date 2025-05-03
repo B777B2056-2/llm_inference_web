@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"llm_online_inference/usercenter/confparser"
+	"llm_inference_web/usercenter/confparser"
 
 	"github.com/golang-jwt/jwt/v5"
 )

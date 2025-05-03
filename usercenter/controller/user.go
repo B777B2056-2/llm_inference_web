@@ -2,10 +2,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"llm_online_inference/usercenter/dto"
-	"llm_online_inference/usercenter/resource"
-	"llm_online_inference/usercenter/services"
-	"llm_online_inference/usercenter/utils"
+	"llm_inference_web/usercenter/dto"
+	"llm_inference_web/usercenter/resource"
+	"llm_inference_web/usercenter/services"
+	"llm_inference_web/usercenter/utils"
 	"net/http"
 )
 

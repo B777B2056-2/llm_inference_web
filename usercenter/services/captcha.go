@@ -3,8 +3,8 @@ package services
 import (
 	"context"
 	"github.com/mojocn/base64Captcha"
-	"llm_online_inference/usercenter/confparser"
-	"llm_online_inference/usercenter/resource"
+	"llm_inference_web/usercenter/confparser"
+	"llm_inference_web/usercenter/resource"
 	"time"
 )
 

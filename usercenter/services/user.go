@@ -5,11 +5,11 @@ import (
 	"errors"
 	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
-	"llm_online_inference/usercenter/confparser"
-	"llm_online_inference/usercenter/dao"
-	"llm_online_inference/usercenter/dto"
-	"llm_online_inference/usercenter/resource"
-	"llm_online_inference/usercenter/utils"
+	"llm_inference_web/usercenter/confparser"
+	"llm_inference_web/usercenter/dao"
+	"llm_inference_web/usercenter/dto"
+	"llm_inference_web/usercenter/resource"
+	"llm_inference_web/usercenter/utils"
 	"time"
 )
 

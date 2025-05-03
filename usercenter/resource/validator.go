@@ -3,7 +3,7 @@ package resource
 import (
 	"errors"
 	"github.com/go-playground/validator/v10"
-	"llm_online_inference/usercenter/utils"
+	"llm_inference_web/usercenter/utils"
 )
 
 var Validator *validator.Validate

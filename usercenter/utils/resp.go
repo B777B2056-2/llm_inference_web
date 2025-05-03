@@ -3,7 +3,7 @@ package utils
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"llm_online_inference/usercenter/confparser"
+	"llm_inference_web/usercenter/confparser"
 	"net/http"
 )
 

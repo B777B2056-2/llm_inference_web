@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"llm_online_inference/accessor/controller"
+	"llm_inference_web/accessor/controller"
 )
 
 func Init(r *gin.Engine) {
